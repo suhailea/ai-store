@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { eq, and, desc } from "drizzle-orm";
-import { getDb, workflows, workflowRuns } from "@staffroom/db";
+import { getDb, workflows, workflowRuns, employees } from "@staffroom/db";
 import { newId } from "../lib/id";
 import { requireAuth } from "../middleware/auth";
 import { fireWorkflow, scheduleWorkflow, unscheduleWorkflow } from "../workflows/engine";
@@ -39,6 +39,18 @@ app.post("/", zValidator("json", createSchema), async (c) => {
   const body = c.req.valid("json");
   const db = getDb();
 
+  // Resolve "__manager__" sentinel to the actual manager employee ID
+  let assignedToEmployeeId = body.assignedToEmployeeId;
+  if (assignedToEmployeeId === "__manager__") {
+    const [manager] = await db
+      .select({ id: employees.id })
+      .from(employees)
+      .where(and(eq(employees.businessId, businessId), eq(employees.isManager, true), eq(employees.status, "active")))
+      .limit(1);
+    if (!manager) return c.json({ ok: false, error: "No active manager found for this business" }, 400);
+    assignedToEmployeeId = manager.id;
+  }
+
   const id = newId("wfl");
   await db.insert(workflows).values({
     id,
@@ -47,7 +59,7 @@ app.post("/", zValidator("json", createSchema), async (c) => {
     description: body.description ?? null,
     triggerType: body.triggerType,
     triggerConfig: body.triggerConfig,
-    assignedToEmployeeId: body.assignedToEmployeeId,
+    assignedToEmployeeId,
     taskTitleTemplate: body.taskTitleTemplate,
     taskDescriptionTemplate: body.taskDescriptionTemplate,
     enabled: body.enabled ?? true,
@@ -83,7 +95,19 @@ app.patch("/:id", zValidator("json", updateSchema), async (c) => {
   if (body.description !== undefined) setFields.description = body.description;
   if (body.triggerType !== undefined) setFields.triggerType = body.triggerType;
   if (body.triggerConfig !== undefined) setFields.triggerConfig = body.triggerConfig;
-  if (body.assignedToEmployeeId !== undefined) setFields.assignedToEmployeeId = body.assignedToEmployeeId;
+  if (body.assignedToEmployeeId !== undefined) {
+    let empId = body.assignedToEmployeeId;
+    if (empId === "__manager__") {
+      const [manager] = await db
+        .select({ id: employees.id })
+        .from(employees)
+        .where(and(eq(employees.businessId, businessId), eq(employees.isManager, true), eq(employees.status, "active")))
+        .limit(1);
+      if (!manager) return c.json({ ok: false, error: "No active manager found for this business" }, 400);
+      empId = manager.id;
+    }
+    setFields.assignedToEmployeeId = empId;
+  }
   if (body.taskTitleTemplate !== undefined) setFields.taskTitleTemplate = body.taskTitleTemplate;
   if (body.taskDescriptionTemplate !== undefined) setFields.taskDescriptionTemplate = body.taskDescriptionTemplate;
   if (body.enabled !== undefined) setFields.enabled = body.enabled;
