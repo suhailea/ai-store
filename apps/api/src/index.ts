@@ -64,15 +64,16 @@ app.route("/api/webhooks", webhookRoutes);
 app.onError(gatewayOnError);
 
 // ─── Serve frontend (production) ──────────────────────────────────────────────
-// serveStatic root is relative to process.cwd() (repo root on Railway).
+// __dirname = apps/api/src, so go up 3 levels to repo root, then into web dist.
 // In dev this serves nothing useful — Vite runs separately on port 5175.
-app.use("/*", serveStatic({ root: "apps/web/dist" }));
+const webDist = resolve(__dirname, "../../web/dist");
+const webDistRelative = webDist.replace(process.cwd() + "/", "");
+app.use("/*", serveStatic({ root: webDistRelative }));
 // SPA fallback — unmatched routes return index.html so React Router works
 app.get("*", async (c) => {
   const { readFileSync } = await import("fs");
-  const indexPath = resolve(process.cwd(), "apps/web/dist/index.html");
   try {
-    return c.html(readFileSync(indexPath, "utf-8"));
+    return c.html(readFileSync(`${webDist}/index.html`, "utf-8"));
   } catch {
     return c.text("Not found", 404);
   }
