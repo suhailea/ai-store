@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { employeesApi, connectorsApi, type ToolGrant } from "@/lib/api";
 import ToolAccessPicker, { grantsForIntegrations } from "@/components/ToolAccessPicker";
 import { AppShell, PageHeader } from "@/components/AppShell";
-import { ArrowLeft, ArrowRight, Check, Crown, Wallet, Plug, ShieldCheck, Mail, Calendar, HardDrive, Table2, MessageSquare, Network, User, Loader2, Bot, Clock } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Crown, Wallet, Plug, ShieldCheck, Mail, Calendar, HardDrive, Table2, MessageSquare, User, Loader2, Bot } from "lucide-react";
 import "./Hire.css";
 
 const PROVIDERS = [
@@ -53,25 +53,11 @@ const MODEL_OPTIONS: Record<string, { id: string; label: string }[]> = {
 
 // Active integrations — shown only if the user has connected the account
 const INTEGRATIONS = [
-  { id: "gmail",         provider: "gmail",           label: "Gmail",          description: "Email & inbox",        icon: Mail },
-  { id: "gcal",          provider: "google_calendar", label: "Google Calendar", description: "Events & scheduling",  icon: Calendar },
-  { id: "google_drive",  provider: "google_drive",    label: "Google Drive",    description: "Files & documents",    icon: HardDrive },
-  { id: "google_sheets", provider: "google_sheets",   label: "Google Sheets",   description: "Spreadsheets & data",  icon: Table2 },
-  { id: "slack",         provider: "slack",           label: "Slack",           description: "Team messaging",       icon: MessageSquare },
-  { id: "internal",      provider: null,              label: "Internal",        description: "Business knowledge",   icon: Network },
-];
-
-// Coming soon integrations — shown as disabled pills
-const COMING_SOON = [
-  { label: "Outlook",     description: "Microsoft email" },
-  { label: "OneDrive",    description: "Microsoft files" },
-  { label: "Dropbox",     description: "Cloud storage" },
-  { label: "PostgreSQL",  description: "Database queries" },
-  { label: "HubSpot",     description: "CRM & contacts" },
-  { label: "Salesforce",  description: "CRM & pipeline" },
-  { label: "Teams",       description: "Microsoft Teams" },
-  { label: "Notion",      description: "Docs & wikis" },
-  { label: "Airtable",    description: "Databases & bases" },
+  { id: "gmail",         provider: "gmail",           label: "Gmail",           description: "Email & inbox",       icon: Mail },
+  { id: "gcal",          provider: "google_calendar", label: "Google Calendar", description: "Events & scheduling", icon: Calendar },
+  { id: "google_drive",  provider: "google_drive",    label: "Google Drive",    description: "Files & documents",   icon: HardDrive },
+  { id: "google_sheets", provider: "google_sheets",   label: "Google Sheets",   description: "Spreadsheets & data", icon: Table2 },
+  { id: "slack",         provider: "slack",           label: "Slack",           description: "Team messaging",      icon: MessageSquare },
 ];
 
 function SetupSection({ number, title, description, children }: { number: number; title: string; description: string; children: ReactNode }) {
@@ -200,15 +186,8 @@ export default function Hire() {
                       </button>
                     );
                   })}
-                  {COMING_SOON.map(({ label, description }) => (
-                    <div key={label} className="hire-app-option hire-app-coming-soon" aria-disabled="true">
-                      <span className="hire-app-icon"><Clock size={20} strokeWidth={1.75} /></span>
-                      <span className="hire-app-copy"><strong>{label}</strong><span>{description}</span></span>
-                      <span className="hire-app-badge">Soon</span>
-                    </div>
-                  ))}
                 </div>
-                {INTEGRATIONS.some(({ id, provider }) => provider !== null && !connectedProviders.has(provider) && !integrations.includes(id)) && (
+                {INTEGRATIONS.some(({ provider }) => !connectedProviders.has(provider)) && (
                   <p className="hire-connect-hint"><Plug size={14} strokeWidth={1.75} /><Link to="/connectors">Connect more apps</Link> to give this employee access to more tools.</p>
                 )}
                 <div className="hire-access-divider"><span>Choose allowed tools</span><span>Access is granted individually</span></div>

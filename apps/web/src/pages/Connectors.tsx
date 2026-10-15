@@ -19,6 +19,7 @@ interface Connector {
   logo: string;       // SVG string rendered inline
   connectType?: ConnectType;  // defaults to "oauth"
   docsUrl?: string;   // optional "Learn more" link
+  comingSoon?: boolean;
 }
 
 const CONNECTORS: Connector[] = [
@@ -47,6 +48,7 @@ const CONNECTORS: Connector[] = [
     name: "Outlook",
     description: "Connect Microsoft Outlook to read and send emails via Microsoft 365.",
     category: "Email",
+    comingSoon: true,
     logo: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="4" y="10" width="26" height="28" rx="2" fill="#0078D4"/>
       <rect x="20" y="14" width="22" height="20" rx="2" fill="#28A8E8"/>
@@ -77,6 +79,7 @@ const CONNECTORS: Connector[] = [
     name: "Outlook Calendar",
     description: "View, create and manage events in Microsoft Outlook Calendar.",
     category: "Calendar",
+    comingSoon: true,
     logo: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="6" y="10" width="36" height="32" rx="3" fill="white" stroke="#E0E0E0" stroke-width="1"/>
       <rect x="6" y="10" width="36" height="10" rx="3" fill="#0078D4"/>
@@ -134,6 +137,7 @@ const CONNECTORS: Connector[] = [
     name: "OneDrive",
     description: "Read, upload and manage files in Microsoft OneDrive.",
     category: "Storage",
+    comingSoon: true,
     logo: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M28 34H10a8 8 0 010-16c.3 0 .6 0 .9.03A10 10 0 0130 14a10 10 0 019.9 8.6A8 8 0 0138 38H28" fill="#0078D4"/>
       <path d="M20 34h18a6 6 0 000-12c-.2 0-.4 0-.6.02A8 8 0 0022 16a8 8 0 00-7.9 7.1A6 6 0 0014 34h6z" fill="#28A8E8"/>
@@ -144,6 +148,7 @@ const CONNECTORS: Connector[] = [
     name: "Dropbox",
     description: "Access and manage files stored in your Dropbox account.",
     category: "Storage",
+    comingSoon: true,
     logo: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M14 8L4 14l10 8 10-8L14 8z" fill="#0061FF"/>
       <path d="M34 8l-10 6 10 8 10-8L34 8z" fill="#0061FF"/>
@@ -178,6 +183,7 @@ const CONNECTORS: Connector[] = [
     name: "HubSpot",
     description: "Read and update contacts, deals and companies in HubSpot CRM.",
     category: "CRM",
+    comingSoon: true,
     logo: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="24" cy="24" r="20" fill="#FF7A59"/>
       <path d="M20 16v8m8-8v8m-8 0h8m0 0v8a4 4 0 01-8 0v-8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -189,6 +195,7 @@ const CONNECTORS: Connector[] = [
     name: "Salesforce",
     description: "Read and update leads, contacts and opportunities in Salesforce.",
     category: "CRM",
+    comingSoon: true,
     logo: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M20 10a8 8 0 018 6 6 6 0 016 6 5 5 0 010 10H14a7 7 0 01-2-13.7A8 8 0 0120 10z" fill="#00A1E0"/>
       <path d="M18 26l4 4 8-8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -217,6 +224,7 @@ const CONNECTORS: Connector[] = [
     name: "Microsoft Teams",
     description: "Send messages and notifications to Microsoft Teams channels.",
     category: "Communication",
+    comingSoon: true,
     logo: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M30 18h8a4 4 0 014 4v10a4 4 0 01-4 4h-8V18z" fill="#5059C9"/>
       <circle cx="34" cy="13" r="5" fill="#5059C9"/>
@@ -233,6 +241,7 @@ const CONNECTORS: Connector[] = [
     name: "Notion",
     description: "Read and write pages, databases and notes in Notion workspaces.",
     category: "Other",
+    comingSoon: true,
     logo: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="6" y="6" width="36" height="36" rx="6" fill="white" stroke="#E0E0E0" stroke-width="1.5"/>
       <path d="M14 14h14l8 8v12H14V14z" fill="#1A1A1A"/>
@@ -245,6 +254,7 @@ const CONNECTORS: Connector[] = [
     name: "Airtable",
     description: "Read and update records in Airtable bases and tables.",
     category: "Other",
+    comingSoon: true,
     logo: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M24 8l18 7-18 7L6 15l18-7z" fill="#FCB400"/>
       <path d="M26 23v14l16-6V17L26 23z" fill="#18BFFF"/>
@@ -344,7 +354,16 @@ function ConnectorCard({
         )}
 
         {/* Action button */}
-        {isConnected || isError ? (
+        {connector.comingSoon ? (
+          <span style={{
+            fontSize: 11, fontWeight: 600, letterSpacing: "0.04em",
+            textTransform: "uppercase", color: "#8a94a6",
+            background: "#f2f4f7", border: "1px solid #e4e7ec",
+            borderRadius: 6, padding: "3px 8px",
+          }}>
+            Coming soon
+          </span>
+        ) : isConnected || isError ? (
           <button
             onClick={onDisconnect}
             disabled={disconnecting}
@@ -530,8 +549,9 @@ export default function Connectors() {
       c.name.toLowerCase().includes(search.toLowerCase()) ||
       c.description.toLowerCase().includes(search.toLowerCase()) ||
       c.category.toLowerCase().includes(search.toLowerCase());
+    // Coming-soon connectors only appear under "all", not under connected/disconnected filters
     const matchesFilter =
-      activeFilter === "all" || statusOf(c.id) === activeFilter;
+      activeFilter === "all" || (!c.comingSoon && statusOf(c.id) === activeFilter);
     return matchesSearch && matchesFilter;
   });
 

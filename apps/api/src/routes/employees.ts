@@ -16,7 +16,7 @@ employeeRoutes.use("*", requireAuth);
 const hireSchema = z.object({
   displayName: z.string().min(1),
   roleDescription: z.string().min(1),
-  integrations: z.array(z.enum(["gmail", "gcal", "drive", "crm", "upload", "internal", "slack"])),
+  integrations: z.array(z.enum(["gmail", "gcal", "google_drive", "google_sheets", "slack", "drive", "crm", "upload", "internal", "excel", "postgres"])),
   budgetMonthlyUsd: z.number().positive(),
   isManager: z.boolean().default(false),
   instructions: z.record(z.string()).default({}),
@@ -51,33 +51,26 @@ employeeRoutes.post("/", requireOwner, zValidator("json", hireSchema), async (c)
   const body = c.req.valid("json");
   const db = getDb();
 
-  // Tool access is explicit: an integration badge never grants every tool.
-  const providerIntegrations: Record<string, string> = {
-    gmail: "gmail",
-    google_calendar: "gcal",
-    google_drive: "drive",
-    hubspot: "crm",
-  };
   if (body.isManager && body.toolGrants.length > 0) {
     return c.json({ ok: false, error: "Managers delegate to employees and cannot receive external tool grants." }, 422);
   }
   const grants = [...new Map(body.toolGrants.map((g) => [JSON.stringify([g.provider, g.toolName]), g])).values()];
   for (const grant of grants) {
-    if (!body.integrations.includes(providerIntegrations[grant.provider] as typeof body.integrations[number])) {
-      return c.json({ ok: false, error: `Select the integration for "${grant.provider}" before granting its tools.` }, 422);
-    }
-    const [tool] = await db.select({ id: connectorTools.id }).from(connectorTools)
-      .innerJoin(connectorAccounts, and(
-        eq(connectorAccounts.businessId, connectorTools.businessId),
-        eq(connectorAccounts.provider, connectorTools.provider)
-      ))
-      .where(and(
-        eq(connectorTools.businessId, businessId),
-        eq(connectorTools.provider, grant.provider),
-        eq(connectorTools.toolName, grant.toolName)
-      )).limit(1);
-    if (!tool) {
-      return c.json({ ok: false, error: `Tool "${grant.toolName}" is unavailable. Reconnect or refresh "${grant.provider}" and try again.` }, 422);
+    // Native providers (gmail, google_calendar, etc.) always have their tools available — skip DB check.
+    if (!isNativeProvider(grant.provider)) {
+      const [tool] = await db.select({ id: connectorTools.id }).from(connectorTools)
+        .innerJoin(connectorAccounts, and(
+          eq(connectorAccounts.businessId, connectorTools.businessId),
+          eq(connectorAccounts.provider, connectorTools.provider)
+        ))
+        .where(and(
+          eq(connectorTools.businessId, businessId),
+          eq(connectorTools.provider, grant.provider),
+          eq(connectorTools.toolName, grant.toolName)
+        )).limit(1);
+      if (!tool) {
+        return c.json({ ok: false, error: `Tool "${grant.toolName}" is unavailable. Reconnect or refresh "${grant.provider}" and try again.` }, 422);
+      }
     }
   }
 
