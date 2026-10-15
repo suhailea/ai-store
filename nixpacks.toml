@@ -9,3 +9,6 @@ cmds = ["pnpm --filter @staffroom/web build"]
 
 [start]
 cmd = "pnpm --filter @staffroom/api start"
+
+[variables]
+NODE_ENV = "production"
