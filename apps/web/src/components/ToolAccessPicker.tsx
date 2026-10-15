@@ -5,10 +5,10 @@ import { connectorsApi, type ConnectorTool, type ToolGrant } from "@/lib/api";
 import "./ToolAccessPicker.css";
 
 const SOURCES = [
-  { integration: "gmail",         provider: "gmail",            label: "Gmail",             refreshable: true  },
-  { integration: "gcal",          provider: "google_calendar",  label: "Google Calendar",   refreshable: true  },
-  { integration: "google_drive",  provider: "google_drive",     label: "Google Drive",      refreshable: true  },
-  { integration: "google_sheets", provider: "google_sheets",    label: "Google Sheets",     refreshable: true  },
+  { integration: "gmail",         provider: "gmail",            label: "Gmail",             refreshable: false },
+  { integration: "gcal",          provider: "google_calendar",  label: "Google Calendar",   refreshable: false },
+  { integration: "google_drive",  provider: "google_drive",     label: "Google Drive",      refreshable: false },
+  { integration: "google_sheets", provider: "google_sheets",    label: "Google Sheets",     refreshable: false },
   { integration: "slack",         provider: "slack",            label: "Slack",             refreshable: true  },
   { integration: "excel",         provider: "excel",            label: "Excel",             refreshable: false },
 ];

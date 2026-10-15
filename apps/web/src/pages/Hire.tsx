@@ -1,9 +1,9 @@
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { employeesApi, type ToolGrant } from "@/lib/api";
+import { employeesApi, connectorsApi, type ToolGrant } from "@/lib/api";
 import ToolAccessPicker, { grantsForIntegrations } from "@/components/ToolAccessPicker";
 import { AppShell, PageHeader } from "@/components/AppShell";
-import { ArrowLeft, ArrowRight, Check, Crown, Wallet, Plug, ShieldCheck, Mail, Calendar, HardDrive, BarChart2, Upload, Network, User, Loader2, Bot } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Crown, Wallet, Plug, ShieldCheck, Mail, Calendar, HardDrive, Table2, MessageSquare, Network, User, Loader2, Bot, Clock } from "lucide-react";
 import "./Hire.css";
 
 const PROVIDERS = [
@@ -51,13 +51,27 @@ const MODEL_OPTIONS: Record<string, { id: string; label: string }[]> = {
   ],
 };
 
+// Active integrations — shown only if the user has connected the account
 const INTEGRATIONS = [
-  { id: "gmail", label: "Gmail", description: "Email & inbox", icon: Mail },
-  { id: "gcal", label: "Calendar", description: "Events & scheduling", icon: Calendar },
-  { id: "drive", label: "Drive", description: "Files & spreadsheets", icon: HardDrive },
-  { id: "crm", label: "CRM", description: "Deals & contacts", icon: BarChart2 },
-  { id: "upload", label: "Uploads", description: "Documents & recordings", icon: Upload },
-  { id: "internal", label: "Internal", description: "Business knowledge", icon: Network },
+  { id: "gmail",         provider: "gmail",           label: "Gmail",          description: "Email & inbox",        icon: Mail },
+  { id: "gcal",          provider: "google_calendar", label: "Google Calendar", description: "Events & scheduling",  icon: Calendar },
+  { id: "google_drive",  provider: "google_drive",    label: "Google Drive",    description: "Files & documents",    icon: HardDrive },
+  { id: "google_sheets", provider: "google_sheets",   label: "Google Sheets",   description: "Spreadsheets & data",  icon: Table2 },
+  { id: "slack",         provider: "slack",           label: "Slack",           description: "Team messaging",       icon: MessageSquare },
+  { id: "internal",      provider: null,              label: "Internal",        description: "Business knowledge",   icon: Network },
+];
+
+// Coming soon integrations — shown as disabled pills
+const COMING_SOON = [
+  { label: "Outlook",     description: "Microsoft email" },
+  { label: "OneDrive",    description: "Microsoft files" },
+  { label: "Dropbox",     description: "Cloud storage" },
+  { label: "PostgreSQL",  description: "Database queries" },
+  { label: "HubSpot",     description: "CRM & contacts" },
+  { label: "Salesforce",  description: "CRM & pipeline" },
+  { label: "Teams",       description: "Microsoft Teams" },
+  { label: "Notion",      description: "Docs & wikis" },
+  { label: "Airtable",    description: "Databases & bases" },
 ];
 
 function SetupSection({ number, title, description, children }: { number: number; title: string; description: string; children: ReactNode }) {
@@ -85,6 +99,13 @@ export default function Hire() {
   const [isManager, setIsManager] = useState(false);
   const [llmProvider, setLlmProvider] = useState<string>("");
   const [llmModel, setLlmModel] = useState<string>("");
+  const [connectedProviders, setConnectedProviders] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    connectorsApi.list().then((rows) => {
+      setConnectedProviders(new Set(rows.map((r) => r.provider)));
+    }).catch(() => {});
+  }, []);
 
   const budgetValue = Number(budget);
   const budgetValid = budget.trim().length > 0 && Number.isFinite(budgetValue) && budgetValue >= 1 && budgetValue <= 1000;
@@ -167,8 +188,10 @@ export default function Hire() {
             <SetupSection number={2} title="Apps & tool access" description={isManager ? "Managers coordinate the team through built-in tools." : "Choose an app, then select the tools this employee can use."}>
               {!isManager && <>
                 <div className="hire-app-grid" role="group" aria-label="Employee integrations">
-                  {INTEGRATIONS.map(({ id, label, description, icon: Icon }) => {
+                  {INTEGRATIONS.map(({ id, provider, label, description, icon: Icon }) => {
+                    const connected = provider === null || connectedProviders.has(provider);
                     const selected = integrations.includes(id);
+                    if (!connected) return null;
                     return (
                       <button type="button" key={id} className={`hire-app-option ${selected ? "is-selected" : ""}`} aria-pressed={selected} disabled={saving} onClick={() => toggleIntegration(id)}>
                         <span className="hire-app-icon"><Icon size={20} strokeWidth={1.75} /></span>
@@ -177,7 +200,17 @@ export default function Hire() {
                       </button>
                     );
                   })}
+                  {COMING_SOON.map(({ label, description }) => (
+                    <div key={label} className="hire-app-option hire-app-coming-soon" aria-disabled="true">
+                      <span className="hire-app-icon"><Clock size={20} strokeWidth={1.75} /></span>
+                      <span className="hire-app-copy"><strong>{label}</strong><span>{description}</span></span>
+                      <span className="hire-app-badge">Soon</span>
+                    </div>
+                  ))}
                 </div>
+                {INTEGRATIONS.some(({ id, provider }) => provider !== null && !connectedProviders.has(provider) && !integrations.includes(id)) && (
+                  <p className="hire-connect-hint"><Plug size={14} strokeWidth={1.75} /><Link to="/connectors">Connect more apps</Link> to give this employee access to more tools.</p>
+                )}
                 <div className="hire-access-divider"><span>Choose allowed tools</span><span>Access is granted individually</span></div>
               </>}
               <ToolAccessPicker integrations={integrations} value={toolGrants} onChange={setToolGrants} isManager={isManager} disabled={saving} />

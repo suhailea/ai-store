@@ -21,6 +21,7 @@ import { newId } from "../lib/id";
 import { discoverProviderTools } from "../agent/mcp/discovery";
 import { discoveryErrorMessage } from "../agent/mcp/discovery-errors";
 import { isDiscoverableProvider } from "../agent/mcp/registry";
+import { isNativeProvider, getNativeToolDefs } from "../agent/tools/index";
 import logger from "../lib/logger";
 import type { AppEnv } from "../lib/types";
 
@@ -573,8 +574,23 @@ connectorRoutes.post("/excel/upload", requireAuth, async (c) => {
 connectorRoutes.get("/:provider/tools", requireAuth, async (c) => {
   const { businessId } = c.get("user");
   const provider = c.req.param("provider");
-  const db = getDb();
 
+  // Native providers have hardcoded tool definitions — no DB discovery needed.
+  if (isNativeProvider(provider)) {
+    const defs = getNativeToolDefs(provider);
+    const now = new Date().toISOString();
+    const rows = defs.map((def) => ({
+      id: `${provider}/${def.name}`,
+      provider,
+      toolName: def.name,
+      description: def.description ?? "",
+      inputSchema: def.input_schema,
+      discoveredAt: now,
+    }));
+    return c.json({ ok: true, data: rows });
+  }
+
+  const db = getDb();
   const rows = await db
     .select({
       id:           connectorTools.id,
