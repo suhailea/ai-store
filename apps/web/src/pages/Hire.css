@@ -1,0 +1,104 @@
+.hire-page { --hire-primary: hsl(var(--primary)); --hire-subtle: hsl(var(--surface-subtle)); --hire-sunken: hsl(var(--surface-sunken)); color: var(--ink); }
+.hire-page p { margin: 0; }
+.hire-back { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-secondary); font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap; }
+.hire-back:hover { color: var(--hire-primary); }
+.hire-content { display: grid; grid-template-columns: minmax(0, 1fr) 304px; align-items: start; gap: 24px; max-width: 1280px; margin: 0 auto; padding: 32px; }
+.hire-form-sections { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.hire-card, .hire-review-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-xs); overflow: hidden; }
+.hire-card-heading { display: flex; align-items: flex-start; gap: 12px; padding: 24px; border-bottom: 1px solid var(--line); }
+.hire-step { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; flex-shrink: 0; border: 1px solid var(--line); background: var(--hire-subtle); border-radius: 8px; font-size: 14px; font-weight: 600; color: var(--ink-secondary); }
+.hire-card-heading h2, .hire-review-heading h2 { margin: 0; font-size: 15px; line-height: 24px; font-weight: 600; }
+.hire-card-heading p, .hire-review-heading p { margin-top: 4px; color: var(--ink-muted); font-size: 12px; line-height: 20px; }
+.hire-card-body { padding: 24px; }
+.hire-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.hire-field { min-width: 0; }
+.hire-field > label, .hire-type-fieldset legend, .hire-budget-label label { display: block; font-size: 14px; line-height: 20px; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
+.hire-field label > span:not(.hire-optional) { color: var(--ink-muted); }
+.hire-optional { color: var(--ink-muted); font-size: 12px; font-weight: 400; margin-left: 8px; }
+.hire-field input, .hire-field textarea { width: 100%; border: 1px solid var(--control-border); border-radius: 8px; color: var(--ink); background: var(--surface); padding: 8px 12px; font: inherit; box-sizing: border-box; }
+.hire-field input { height: 40px; }
+.hire-field textarea { min-height: 160px; resize: vertical; line-height: 24px; padding: 12px; }
+.hire-field input::placeholder, .hire-field textarea::placeholder { color: var(--ink-muted); }
+.hire-field-help { font-size: 12px; line-height: 20px; color: var(--ink-muted); margin-top: 8px !important; }
+.hire-type-fieldset { border: none; margin: 24px 0 0; padding: 0; min-width: 0; }
+.hire-type-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.hire-type-option { display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 1px solid var(--control-border); border-radius: 8px; cursor: pointer; }
+.hire-type-option > input { width: 16px; height: 16px; accent-color: var(--hire-primary); flex-shrink: 0; margin-top: 4px; }
+.hire-type-option > svg { color: var(--icon-strong); flex-shrink: 0; margin-top: 2px; }
+.hire-type-option > span { display: flex; flex-direction: column; gap: 4px; }
+.hire-type-option strong { font-size: 14px; font-weight: 600; }
+.hire-type-option span span { color: var(--ink-muted); font-size: 12px; line-height: 20px; }
+.hire-type-option.is-selected, .hire-app-option.is-selected { background: var(--primary-soft); border-color: var(--hire-primary); }
+.hire-type-option.is-selected > svg { color: var(--hire-primary); }
+.hire-app-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.hire-app-option { display: flex; align-items: center; gap: 12px; padding: 16px 12px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); text-align: left; cursor: pointer; min-width: 0; font: inherit; color: var(--ink); }
+.hire-app-icon { display: flex; align-items: center; justify-content: center; color: var(--icon-strong); flex-shrink: 0; }
+.hire-app-option.is-selected .hire-app-icon { color: var(--hire-primary); }
+.hire-app-copy { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+.hire-app-copy strong { font-size: 14px; font-weight: 500; }
+.hire-app-copy > span { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+.hire-app-check { display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; border: 1px solid var(--control-border); border-radius: 4px; flex-shrink: 0; }
+.hire-app-option.is-selected .hire-app-check { background: var(--hire-primary); border-color: var(--hire-primary); color: var(--on-primary); }
+.hire-access-divider { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 24px 0 16px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 14px; font-weight: 500; }
+.hire-access-divider span:last-child { font-size: 12px; color: var(--ink-muted); font-weight: 400; }
+.hire-budget-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-top: 24px; margin-top: 24px; border-top: 1px solid var(--line); }
+.hire-budget-label { display: flex; align-items: flex-start; gap: 12px; }
+.hire-budget-label svg { color: var(--icon-strong); flex-shrink: 0; margin-top: 2px; }
+.hire-budget-label label { margin-bottom: 4px; }
+.hire-budget-label p { color: var(--ink-muted); font-size: 12px; line-height: 20px; }
+.hire-budget-control { display: flex; align-items: center; gap: 8px; white-space: nowrap; color: var(--ink-muted); font-size: 12px; }
+.hire-budget-control input { width: 88px; height: 40px; font: inherit; font-size: 14px; color: var(--ink); border: 1px solid var(--control-border); border-radius: 8px; padding: 8px; background: var(--surface); }
+.hire-field-error { color: var(--danger); font-size: 12px; margin-top: 8px !important; }
+.hire-review { position: sticky; top: 84px; min-width: 0; }
+.hire-review-heading { padding: 20px 24px; border-bottom: 1px solid var(--line); }
+.hire-employee-preview { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 24px; }
+.hire-avatar { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 9999px; background: var(--primary-soft); color: var(--hire-primary); font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+.hire-employee-preview > strong { font-size: 15px; font-weight: 600; line-height: 24px; overflow-wrap: anywhere; max-width: 100%; }
+.hire-employee-preview > p { font-size: 12px; color: var(--ink-muted); margin-top: 4px; overflow-wrap: anywhere; }
+.hire-type-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 6px; background: var(--hire-subtle); color: var(--ink-secondary); font-size: 12px; line-height: 16px; margin-top: 12px; }
+.hire-review-stats { display: flex; flex-direction: column; gap: 16px; margin: 0 24px; padding: 20px 0; border-top: 1px solid var(--line); }
+.hire-review-stats > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; }
+.hire-review-stats dt { display: flex; align-items: center; gap: 8px; color: var(--ink-muted); }
+.hire-review-stats dd { margin: 0; color: var(--ink); font-weight: 600; }
+.hire-selected-apps { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 24px 20px; }
+.hire-selected-apps > span { display: flex; align-items: center; gap: 4px; color: var(--ink-secondary); background: var(--hire-subtle); padding: 4px 8px; border-radius: 6px; font-size: 12px; line-height: 16px; }
+.hire-approval-note { display: flex; gap: 8px; margin: 0 24px 24px; padding: 12px; background: var(--hire-subtle); border-radius: 8px; }
+.hire-approval-note svg { color: var(--hire-primary); flex-shrink: 0; }
+.hire-approval-note strong { font-size: 12px; font-weight: 600; }
+.hire-approval-note p { font-size: 12px; line-height: 20px; color: var(--ink-muted); margin-top: 4px; }
+.hire-review-footer { padding: 20px 24px; border-top: 1px solid var(--line); }
+.hire-submit { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 40px; border: none; border-radius: 8px; background: var(--hire-primary); color: var(--on-primary); font: inherit; font-weight: 600; cursor: pointer; transition: background-color 120ms; }
+.hire-submit:hover { background: var(--primary-hover); }
+.hire-submit:disabled { opacity: .45; cursor: not-allowed; }
+.hire-review-footer > p:last-child { color: var(--ink-muted); font-size: 12px; line-height: 20px; text-align: center; margin-top: 12px; }
+.hire-submit-error { padding: 12px; background: var(--danger-soft); color: var(--danger); border-radius: 8px; font-size: 12px; line-height: 20px; margin-bottom: 12px !important; overflow-wrap: anywhere; }
+.hire-page :is(button, a, input, textarea, summary):focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.hire-page :is(input, textarea, button):disabled, .hire-type-option:has(input:disabled) { cursor: not-allowed; }
+@media (max-width: 1180px) {
+  .hire-content { grid-template-columns: minmax(0, 1fr) 272px; padding: 24px; }
+  .hire-app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hire-type-options { grid-template-columns: minmax(0, 1fr); }
+  .hire-budget-row { flex-wrap: wrap; }
+}
+@media (max-width: 1000px) {
+  .hire-content { grid-template-columns: minmax(0, 1fr); max-width: 800px; }
+  .hire-review { position: static; }
+  .hire-type-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hire-review-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .hire-review-heading { grid-column: 1 / -1; }
+  .hire-review-stats { justify-content: center; border-top: none; }
+  .hire-selected-apps, .hire-approval-note, .hire-review-footer { grid-column: 1 / -1; }
+}
+@media (max-width: 600px) {
+  .hire-page > div:first-child { padding: 20px 16px !important; }
+  .hire-page > div:first-child > div { flex-wrap: wrap; }
+  .hire-content { padding: 16px; gap: 16px; }
+  .hire-form-sections { gap: 16px; }
+  .hire-card-heading, .hire-card-body { padding: 20px 16px; }
+  .hire-fields, .hire-type-options { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .hire-app-grid { gap: 8px; }
+  .hire-app-option { gap: 8px; padding: 12px 8px; }
+  .hire-app-icon svg { width: 16px; height: 16px; }
+  .hire-review-card { display: block; }
+  .hire-review-stats { border-top: 1px solid var(--line); }
+}

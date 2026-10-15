@@ -1,0 +1,39 @@
+{
+  "name": "@staffroom/db",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "db:push": "drizzle-kit push",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "tsx src/seed/demo.ts",
+    "db:seed:shopflow": "tsx src/seed/shopflow.ts",
+    "db:seed:sheets": "tsx src/seed/shopflow-sheets.ts",
+    "db:seed:sheets:expand": "tsx src/seed/shopflow-sheets-expand.ts",
+    "db:seed:shopflow:fix": "tsx src/seed/shopflow-fix.ts"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.0",
+    "drizzle-orm": "^0.36.0",
+    "nanoid": "^5.0.7",
+    "postgres": "^3.4.4"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.0.0",
+    "drizzle-kit": "^0.28.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

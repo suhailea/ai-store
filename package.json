@@ -1,0 +1,25 @@
+{
+  "name": "staffroom",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel --filter './apps/*' dev",
+    "build": "pnpm --filter './packages/*' build && pnpm --filter './apps/*' build",
+    "typecheck": "pnpm --recursive typecheck",
+    "db:migrate": "pnpm --filter @staffroom/db db:migrate",
+    "db:studio": "pnpm --filter @staffroom/db db:studio",
+    "db:seed": "pnpm --filter @staffroom/db db:seed",
+    "db:seed:shopflow": "pnpm --filter @staffroom/db db:seed:shopflow",
+    "db:seed:sheets": "pnpm --filter @staffroom/db db:seed:sheets",
+    "db:seed:sheets:expand": "pnpm --filter @staffroom/db db:seed:sheets:expand",
+    "db:seed:shopflow:fix": "pnpm --filter @staffroom/db db:seed:shopflow:fix"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": ["pg", "@types/pg"]
+    }
+  }
+}

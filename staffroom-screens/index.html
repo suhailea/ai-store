@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Staffroom — Screens</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>:root{
+--surface:#ffffff;
+--surface-subtle:#f7f8fa;
+--surface-sunken:#eef1f4;
+--line:#e4e7ec;
+--line-strong:#d0d5dd;
+--control-border:#8a94a6;
+--ink:#101828;
+--ink-secondary:#475467;
+--ink-muted:#667085;
+--icon:#8a94a6;
+--icon-strong:#475467;
+--brand-900:#0b2530;
+--brand-800:#123642;
+--brand-700:#17404d;
+--primary:#0f5b6c;
+--primary-hover:#0b4a58;
+--primary-soft:#e6f2f4;
+--on-primary:#ffffff;
+--sidebar-ink:#c9d6dc;
+--sidebar-icon:#8fb0bb;
+--accent:#f2a93b;
+--accent-soft:#fef4e4;
+--success:#157f4f;
+--success-soft:#e8f6ee;
+--warning:#b45309;
+--warning-soft:#fef4e4;
+--danger:#c0362c;
+--danger-soft:#fdecea;
+--info:#1d63c8;
+--info-soft:#eaf1fc;
+--status-working:#22a06b;
+--status-idle:#98a2b3;
+--status-waiting:#f2a93b;
+--status-paused:#667085;
+--emp-layla:#b4366a;
+--emp-layla-soft:#fcebf2;
+--emp-omar:#2f62c9;
+--emp-omar-soft:#eaf0fc;
+--emp-maya:#17774f;
+--emp-maya-soft:#e6f5ee;
+--emp-zayd:#a84c0a;
+--emp-zayd-soft:#fdf0e6;
+--emp-noor:#5e4bc4;
+--emp-noor-soft:#efedfb;
+--focus-ring:var(--primary);
+--link:var(--primary);
+--overlay:rgba(16, 24, 40, 0.48);
+--space-1:4px;
+--space-2:8px;
+--space-3:12px;
+--space-4:16px;
+--space-5:20px;
+--space-6:24px;
+--space-8:32px;
+--space-10:40px;
+--space-12:48px;
+--radius-sm:6px;
+--radius-md:8px;
+--radius-lg:12px;
+--radius-full:9999px;
+--shadow-xs:0 1px 2px rgba(16, 24, 40, 0.05);
+--shadow-sm:0 1px 3px rgba(16, 24, 40, 0.08), 0 1px 2px rgba(16, 24, 40, 0.04);
+--shadow-lg:0 12px 24px -4px rgba(16, 24, 40, 0.12), 0 4px 8px -2px rgba(16, 24, 40, 0.06);
+--icon-xs:14px;
+--icon-sm:16px;
+--icon-md:20px;
+--icon-lg:24px;
+--control-sm:32px;
+--control-md:38px;
+--control-lg:44px;
+--sidebar-width:248px;
+--topbar-height:60px;
+--content-max:1280px;
+--z-sticky:10;
+--z-overlay:40;
+--z-modal:50;
+--z-toast:60;
+--font-sans:"Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+--font-mono:"JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+--text-display:700 30px/38px var(--font-sans);
+--text-h1:700 24px/32px var(--font-sans);
+--text-h2:600 18px/28px var(--font-sans);
+--text-h3:600 15px/22px var(--font-sans);
+--text-body-lg:400 16px/24px var(--font-sans);
+--text-body:400 14px/20px var(--font-sans);
+--text-body-strong:600 14px/20px var(--font-sans);
+--text-small:400 13px/18px var(--font-sans);
+--text-caption:500 12px/16px var(--font-sans);
+--text-overline:600 11px/16px var(--font-sans);
+--text-mono:500 13px/20px var(--font-mono);
+--text-stat:600 28px/36px var(--font-sans);
+}
+body{margin:0;font-family:var(--font-sans);background:var(--surface-subtle);color:var(--ink)}
+main{max-width:760px;margin:0 auto;padding:48px 24px} h1{font-size:24px;line-height:32px;margin:0 0 4px} p{color:var(--ink-muted);margin:0 0 24px;font-size:14px}
+ul{list-style:none;padding:0;margin:0;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+li+li{border-top:1px solid var(--line)} a{display:flex;gap:16px;align-items:flex-start;padding:16px 20px;color:inherit;text-decoration:none} a:hover{background:var(--surface-subtle)}
+.n{font-family:var(--font-mono);font-size:13px;color:var(--primary);background:var(--primary-soft);border-radius:6px;padding:2px 8px}
+strong{display:block;font-size:15px;line-height:22px} small{display:block;font-size:13px;line-height:18px;color:var(--ink-muted)}
+</style></head><body><main><h1>Staffroom screens</h1><p>Each screen is a standalone HTML file — open it directly in a browser, no build step.</p><ul>
+<li><a href="01-office-dashboard.html"><span class="n">01</span><span><strong>Office (Dashboard)</strong><small>the dashboard: Noor’s brief, KPIs, live activity with a blocked injection, approvals waiting and team status.</small></span></a></li>
+<li><a href="02-team-board.html"><span class="n">02</span><span><strong>Team Board</strong><small>Kanban across all employees: Assigned, Working, Waiting for you, Done.</small></span></a></li>
+<li><a href="03-approvals.html"><span class="n">03</span><span><strong>Approvals</strong><small>list of pending actions and the exact preview with approve / edit / reject.</small></span></a></li>
+<li><a href="04-team.html"><span class="n">04</span><span><strong>Team</strong><small>the five AI employees as cards plus the people table.</small></span></a></li>
+<li><a href="05-employee-profile.html"><span class="n">05</span><span><strong>Employee Profile</strong><small>instructions, access badge, memory, budget, performance and work history.</small></span></a></li>
+<li><a href="06-task-run-view.html"><span class="n">06</span><span><strong>Task Detail & Run View</strong><small>step-by-step trace, cost and stop / retry.</small></span></a></li>
+<li><a href="07-create-task-modal.html"><span class="n">07</span><span><strong>Create Task (Modal)</strong><small>the New task modal over the board.</small></span></a></li>
+<li><a href="08-hire-employee-form.html"><span class="n">08</span><span><strong>Hire Employee (Form)</strong><small>step 2 of the hiring flow as a sectioned form.</small></span></a></li>
+<li><a href="09-invite-and-approval-rule-forms.html"><span class="n">09</span><span><strong>Invite Staff & Approval Rule (Forms)</strong><small>the two short settings forms.</small></span></a></li>
+<li><a href="10-loading-and-empty-states.html"><span class="n">10</span><span><strong>Loading & Empty States</strong><small>skeletons, loaders, empty states and toasts.</small></span></a></li>
+</ul></main></body></html>

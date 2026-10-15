@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@staffroom/db": ["../../packages/db/src/index.ts"],
+      "@staffroom/types": ["../../packages/types/src/index.ts"],
+      "@staffroom/llm": ["../../packages/llm/src/index.ts"]
+    }
+  },
+  "include": ["src"]
+}

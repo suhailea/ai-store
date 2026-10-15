@@ -1,0 +1,193 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── Staffroom design system — direct hex tokens ── */
+    --surface: #ffffff;
+    --surface-subtle: #f7f8fa;
+    --surface-sunken: #eef1f4;
+    --line: #e4e7ec;
+    --line-strong: #d0d5dd;
+    --control-border: #8a94a6;
+    --ink: #101828;
+    --ink-secondary: #475467;
+    --ink-muted: #667085;
+    --icon: #8a94a6;
+    --icon-strong: #475467;
+    --brand-900: #0b2530;
+    --brand-800: #123642;
+    --brand-700: #17404d;
+    --primary: #0f5b6c;
+    --primary-hover: #0b4a58;
+    --primary-soft: #e6f2f4;
+    --on-primary: #ffffff;
+    --sidebar-ink: #c9d6dc;
+    --sidebar-icon: #8fb0bb;
+    --accent: #f2a93b;
+    --accent-soft: #fef4e4;
+    --success: #157f4f;
+    --success-soft: #e8f6ee;
+    --warning: #b45309;
+    --warning-soft: #fef4e4;
+    --danger: #c0362c;
+    --danger-soft: #fdecea;
+    --info: #1d63c8;
+    --info-soft: #eaf1fc;
+    --status-working: #22a06b;
+    --status-idle: #98a2b3;
+    --status-waiting: #f2a93b;
+    --status-paused: #667085;
+    --emp-noor: #5e4bc4;
+    --emp-noor-soft: #efedfb;
+    --emp-layla: #b4366a;
+    --emp-layla-soft: #fcebf2;
+    --emp-omar: #2f62c9;
+    --emp-omar-soft: #eaf0fc;
+    --emp-maya: #17774f;
+    --emp-maya-soft: #e6f5ee;
+    --emp-zayd: #a84c0a;
+    --emp-zayd-soft: #fdf0e6;
+    --focus-ring: #0f5b6c;
+    --overlay: rgba(16, 24, 40, 0.48);
+    --shadow-xs: 0 1px 2px rgba(16,24,40,0.05);
+    --shadow-sm: 0 1px 3px rgba(16,24,40,0.08), 0 1px 2px rgba(16,24,40,0.04);
+    --shadow-lg: 0 12px 24px -4px rgba(16,24,40,0.12), 0 4px 8px -2px rgba(16,24,40,0.06);
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 9999px;
+    --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    /* ── Surfaces ── */
+    --background:      0 0% 100%;           /* #ffffff */
+    --card:            0 0% 100%;
+    --popover:         0 0% 100%;
+    --surface-subtle:  210 18% 97%;         /* #f7f8fa */
+    --surface-sunken:  210 16% 93%;         /* #eef1f4 */
+
+    /* ── Foreground / ink ── */
+    --foreground:      220 57% 10%;         /* #101828 */
+    --card-foreground: 220 57% 10%;
+    --popover-foreground: 220 57% 10%;
+    --muted-foreground: 220 14% 46%;        /* #667085 */
+
+    /* ── Borders ── */
+    --border:          214 20% 90%;         /* #e4e7ec */
+    --input:           214 20% 90%;
+
+    /* ── Primary — teal/petrol #0f5b6c ── */
+    --primary:         191 79% 24%;
+    --primary-foreground: 0 0% 100%;
+    --ring:            191 79% 24%;
+
+    /* ── Secondary ── */
+    --secondary:       210 18% 97%;
+    --secondary-foreground: 220 57% 10%;
+
+    /* ── Muted ── */
+    --muted:           210 16% 93%;
+
+    /* ── Accent (amber — approvals only) ── */
+    --accent:          37 87% 59%;          /* #f2a93b */
+    --accent-foreground: 0 0% 100%;
+
+    /* ── Destructive ── */
+    --destructive:     4 62% 47%;           /* #c0362c */
+    --destructive-foreground: 0 0% 100%;
+
+    /* ── Radius ── */
+    --radius: 0.5rem;                       /* 8px = radius-md */
+    --radius-sm: 0.375rem;                  /* 6px */
+    --radius-lg: 0.75rem;                   /* 12px */
+
+    /* ── Sidebar — deep petrol (brand-900) ── */
+    --sidebar-background:        199 67% 11%;   /* #0b2530 brand-900 */
+    --sidebar-foreground:        197 24% 83%;   /* #c9d6dc sidebar-ink */
+    --sidebar-primary:           191 79% 24%;   /* #0f5b6c teal primary */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent:            197 35% 17%;   /* #17404d brand-700 active */
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border:            197 35% 17%;   /* subtle divider */
+    --sidebar-ring:              191 79% 24%;
+    --sidebar-icon:              197 22% 63%;   /* #8fb0bb */
+    --sidebar-amber:             37 87% 59%;    /* #f2a93b approvals badge */
+
+    /* ── Status ── */
+    --status-success: 151 67% 29%;   /* #157f4f */
+    --status-warning: 28 91% 37%;   /* #b45309 */
+    --status-danger:  4 62% 47%;    /* #c0362c */
+    --status-info:    218 74% 44%;  /* #1d63c8 */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html, body, #root {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1 { font-size: 24px; line-height: 32px; font-weight: 700; letter-spacing: -0.01em; }
+  h2 { font-size: 18px; line-height: 28px; font-weight: 600; }
+  h3 { font-size: 15px; line-height: 22px; font-weight: 600; }
+
+  code, pre, .font-mono {
+    font-family: "JetBrains Mono", "Fira Mono", monospace;
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 500;
+  }
+}
+
+@layer utilities {
+  /* Overline style — uppercase section labels */
+  .text-overline {
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Stat numbers */
+  .text-stat {
+    font-size: 28px;
+    line-height: 36px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  /* Caption / badges */
+  .text-caption {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 1200px) {
+  .app-topbar-search { display: none !important; }
+}
+@media (max-width: 1000px) {
+  .app-topbar-spend, .app-topbar-user > div:last-child { display: none !important; }
+}
+@media (max-width: 767px) {
+  .app-topbar { padding: 0 16px !important; gap: 8px !important; }
+  .app-topbar-search, .app-topbar-spend, .app-topbar-user > div:last-child { display: none !important; }
+}
