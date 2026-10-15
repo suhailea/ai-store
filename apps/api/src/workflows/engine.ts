@@ -138,8 +138,12 @@ export async function scheduleWorkflows(): Promise<void> {
     if (!cron) continue;
 
     try {
+      // Only catch up if the workflow has fired before — new workflows should not
+      // fire immediately just because their first scheduled time already passed today.
+      if (!wfl.lastFiredAt) continue;
+
       const interval = CronExpressionParser.parse(cron, { tz: "UTC" });
-      const since = wfl.lastFiredAt ?? wfl.createdAt;
+      const since = wfl.lastFiredAt;
       const now = new Date();
 
       // Walk forward from last fired time — if there was a tick before now, we missed it
