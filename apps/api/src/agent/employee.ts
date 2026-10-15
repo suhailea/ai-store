@@ -185,10 +185,12 @@ export interface RunEmployeeOptions {
   runId: string;
   /** Serialized message history from a paused run — present when resuming after approval */
   resumeMessages?: LLMMessage[];
+  /** Prior chat session turns — prepended so the agent can follow up on the conversation */
+  chatHistory?: LLMMessage[];
 }
 
 export async function runAsEmployee(opts: RunEmployeeOptions): Promise<void> {
-  const { task, employee, business, llmConfig, demoMode, runId, resumeMessages } = opts;
+  const { task, employee, business, llmConfig, demoMode, runId, resumeMessages, chatHistory } = opts;
 
   const memoryContext = await loadMemoryContext({ employeeId: employee.id, businessId: employee.businessId, taskId: task.id });
 
@@ -211,9 +213,13 @@ export async function runAsEmployee(opts: RunEmployeeOptions): Promise<void> {
 
   const toolset = await buildEmployeeToolset(employee.id, employee.businessId);
 
-  // Use checkpoint messages if resuming after approval, otherwise start fresh
+  // Use checkpoint messages if resuming after approval, otherwise start fresh.
+  // Prepend chat session history so the agent can follow up on prior turns.
+  const currentTaskMsg: LLMMessage = { role: "user", content: task.description
+    ? `Task: ${task.title}\n\n${task.description}`
+    : `Task: ${task.title}` };
   const initialMessages: LLMMessage[] = resumeMessages ??
-    [{ role: "user", content: `Task: ${task.title}\n\n${task.description}` }];
+    [...(chatHistory ?? []), currentTaskMsg];
 
   await runAgentLoop({
     ctx,

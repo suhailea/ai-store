@@ -173,10 +173,12 @@ export interface RunSupervisorOptions {
   runId: string;
   /** Serialized message history from a paused run — present when resuming after approval */
   resumeMessages?: LLMMessage[];
+  /** Prior chat session turns — prepended so the agent can follow up on the conversation */
+  chatHistory?: LLMMessage[];
 }
 
 export async function runAsSupervisor(opts: RunSupervisorOptions): Promise<void> {
-  const { task, employee, business, llmConfig, runId, resumeMessages } = opts;
+  const { task, employee, business, llmConfig, runId, resumeMessages, chatHistory } = opts;
 
   const memoryContext = await loadMemoryContext({ employeeId: employee.id, businessId: employee.businessId, taskId: task.id });
 
@@ -197,8 +199,11 @@ export async function runAsSupervisor(opts: RunSupervisorOptions): Promise<void>
     demoMode: opts.demoMode,
   };
 
+  const currentTaskMsg: LLMMessage = { role: "user", content: task.description
+    ? `Task: ${task.title}\n\n${task.description}`
+    : `Task: ${task.title}` };
   const initialMessages: LLMMessage[] = resumeMessages ??
-    [{ role: "user", content: `Task: ${task.title}\n\n${task.description}` }];
+    [...(chatHistory ?? []), currentTaskMsg];
 
   await runAgentLoop({
     ctx,

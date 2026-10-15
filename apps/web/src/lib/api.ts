@@ -271,5 +271,6 @@ export interface ChatSession {
 export const chatSessionsApi = {
   list: (employeeId: string) => req<ChatSession[]>("GET", `/chat-sessions?employeeId=${employeeId}`),
   create: (employeeId: string, title?: string) => req<ChatSession>("POST", "/chat-sessions", { employeeId, title }),
+  delete: (sessionId: string) => req<null>("DELETE", `/chat-sessions/${sessionId}`),
   tasks: (sessionId: string) => req<unknown[]>("GET", `/chat-sessions/${sessionId}/tasks`),
 };

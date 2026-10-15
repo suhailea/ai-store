@@ -7,7 +7,7 @@
  *   - employee.isManager === false → employee agent  (Haiku, badge-gated tools)
  */
 
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, asc, and } from "drizzle-orm";
 import { getDb, tasks, runs, employees, businesses } from "@staffroom/db";
 import { newId } from "../lib/id";
 import { DEFAULT_LLM_CONFIG } from "@staffroom/llm";
@@ -89,13 +89,62 @@ export async function startAgentRun(taskId: string): Promise<void> {
     integrations: (employee.integrations ?? []) as string[],
   };
 
+  // ── Load chat session history for follow-up context ───────────────────────
+  // If this task belongs to a chat session, load all prior completed tasks in
+  // that session as alternating user/assistant LLM messages so the agent can
+  // reference the full conversation history.
+  let chatHistory: LLMMessage[] | undefined;
+
+  if (task.chatSessionId && !resumeMessages) {
+    const priorTasks = await db
+      .select({ id: tasks.id, title: tasks.title })
+      .from(tasks)
+      .where(and(
+        eq(tasks.chatSessionId, task.chatSessionId),
+        eq(tasks.status, "done"),
+      ))
+      .orderBy(asc(tasks.createdAt));
+
+    if (priorTasks.length > 0) {
+      const historyMessages: LLMMessage[] = [];
+
+      for (const priorTask of priorTasks) {
+        // Get the latest run for this task
+        const [latestRun] = await db
+          .select({ steps: runs.steps })
+          .from(runs)
+          .where(eq(runs.taskId, priorTask.id))
+          .orderBy(desc(runs.createdAt))
+          .limit(1);
+
+        if (!latestRun) continue;
+
+        // Extract the final summary from the run steps
+        const steps = latestRun.steps as { type: string; content?: string }[];
+        const finalStep = steps.find((s) => s.type === "final");
+        const reply = finalStep?.content ?? null;
+
+        if (!reply) continue;
+
+        historyMessages.push({ role: "user", content: priorTask.title });
+        historyMessages.push({ role: "assistant", content: reply });
+      }
+
+      if (historyMessages.length > 0) {
+        chatHistory = historyMessages;
+        logger.info("Loaded chat session history", { taskId, sessionId: task.chatSessionId, turns: historyMessages.length / 2 });
+      }
+    }
+  }
+
   // ── Branch: supervisor or employee ─────────────────────────────────────────
   const resumeOpts = resumeMessages ? { resumeMessages } : {};
+  const historyOpts = chatHistory ? { chatHistory } : {};
 
   if (employee.isManager) {
-    await runAsSupervisor({ task, employee: employeeWithInstructions, business, llmConfig, demoMode, runId, ...resumeOpts });
+    await runAsSupervisor({ task, employee: employeeWithInstructions, business, llmConfig, demoMode, runId, ...resumeOpts, ...historyOpts });
   } else {
-    await runAsEmployee({ task, employee: employeeWithInstructions, business, llmConfig, demoMode, runId, ...resumeOpts });
+    await runAsEmployee({ task, employee: employeeWithInstructions, business, llmConfig, demoMode, runId, ...resumeOpts, ...historyOpts });
   }
 
   logger.info("Agent run finished", { taskId, runId });

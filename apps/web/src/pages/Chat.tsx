@@ -23,6 +23,7 @@ import {
   Clock,
   ExternalLink,
   Plus,
+  Trash2,
 } from "lucide-react";
 import { EmpAvatar } from "@/components/EmpAvatar";
 import { AssistantBubble, extractReply } from "@/components/chat/AssistantBubble";
@@ -82,6 +83,7 @@ function ConvSidebar({
   activeSessionId,
   onSelectSession,
   onNewChat,
+  onDeleteSession,
 }: {
   employees: Employee[];
   selectedEmpId: string;
@@ -90,6 +92,7 @@ function ConvSidebar({
   activeSessionId: string | null;
   onSelectSession: (sessionId: string) => void;
   onNewChat: () => void;
+  onDeleteSession: (sessionId: string) => void;
 }) {
   const activeEmps = employees.filter((e) => e.status === "active");
   const empSessions = sessions[selectedEmpId] ?? [];
@@ -204,44 +207,71 @@ function ConvSidebar({
           empSessions.map((session) => {
             const isActive = session.id === activeSessionId;
             return (
-              <button
+              <div
                 key={session.id}
-                onClick={() => onSelectSession(session.id)}
-                style={{
-                  width: "100%", display: "flex", alignItems: "flex-start", gap: 9,
-                  padding: "9px 14px",
-                  background: isActive ? C.brandSoft : "transparent",
-                  borderLeft: isActive ? `2px solid ${C.brand}` : "2px solid transparent",
-                  border: "none", cursor: "pointer", textAlign: "left",
-                  transition: "background 100ms",
+                style={{ position: "relative", display: "flex", alignItems: "stretch" }}
+                onMouseEnter={(ev) => {
+                  const btn = ev.currentTarget.querySelector(".session-delete-btn") as HTMLElement | null;
+                  if (btn) btn.style.opacity = "1";
                 }}
-                onMouseEnter={(ev) => { if (!isActive) ev.currentTarget.style.background = C.surfaceSubtle; }}
-                onMouseLeave={(ev) => { if (!isActive) ev.currentTarget.style.background = "transparent"; }}
+                onMouseLeave={(ev) => {
+                  const btn = ev.currentTarget.querySelector(".session-delete-btn") as HTMLElement | null;
+                  if (btn) btn.style.opacity = "0";
+                }}
               >
-                <div style={{ paddingTop: 5 }}>
-                  <span style={{
-                    width: 7, height: 7, borderRadius: "9999px",
-                    background: C.inkMuted, flexShrink: 0, display: "inline-block",
-                    opacity: 0.5,
-                  }} />
-                </div>
-                <div style={{ minWidth: 0, flex: 1 }}>
-                  <p style={{
-                    margin: 0,
-                    fontSize: 13, fontWeight: isActive ? 600 : 400,
-                    color: isActive ? C.brand : C.ink,
-                    whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-                  }}>
-                    {session.title}
-                  </p>
-                  <p style={{ margin: "2px 0 0", fontSize: 11, color: C.inkMuted }}>
-                    {timeAgo(session.updatedAt)}
-                    {session.taskCount > 0 && (
-                      <span style={{ marginLeft: 6 }}>· {session.taskCount} {session.taskCount === 1 ? "task" : "tasks"}</span>
-                    )}
-                  </p>
-                </div>
-              </button>
+                <button
+                  onClick={() => onSelectSession(session.id)}
+                  style={{
+                    flex: 1, display: "flex", alignItems: "flex-start", gap: 9,
+                    padding: "9px 36px 9px 14px",
+                    background: isActive ? C.brandSoft : "transparent",
+                    borderLeft: isActive ? `2px solid ${C.brand}` : "2px solid transparent",
+                    border: "none", cursor: "pointer", textAlign: "left",
+                    transition: "background 100ms",
+                  }}
+                  onMouseEnter={(ev) => { if (!isActive) ev.currentTarget.style.background = C.surfaceSubtle; }}
+                  onMouseLeave={(ev) => { if (!isActive) ev.currentTarget.style.background = "transparent"; }}
+                >
+                  <div style={{ paddingTop: 5 }}>
+                    <span style={{
+                      width: 7, height: 7, borderRadius: "9999px",
+                      background: C.inkMuted, flexShrink: 0, display: "inline-block",
+                      opacity: 0.5,
+                    }} />
+                  </div>
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={{
+                      margin: 0,
+                      fontSize: 13, fontWeight: isActive ? 600 : 400,
+                      color: isActive ? C.brand : C.ink,
+                      whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                    }}>
+                      {session.title}
+                    </p>
+                    <p style={{ margin: "2px 0 0", fontSize: 11, color: C.inkMuted }}>
+                      {timeAgo(session.updatedAt)}
+                      {session.taskCount > 0 && (
+                        <span style={{ marginLeft: 6 }}>· {session.taskCount} {session.taskCount === 1 ? "task" : "tasks"}</span>
+                      )}
+                    </p>
+                  </div>
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onDeleteSession(session.id); }}
+                  title="Delete conversation"
+                  style={{
+                    position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
+                    background: "none", border: "none", cursor: "pointer",
+                    padding: 4, borderRadius: 4, color: C.inkMuted,
+                    opacity: 0, transition: "opacity 120ms",
+                  }}
+                  onMouseEnter={(ev) => { ev.currentTarget.style.color = "#e53e3e"; ev.currentTarget.style.opacity = "1"; }}
+                  onMouseLeave={(ev) => { ev.currentTarget.style.color = C.inkMuted; ev.currentTarget.style.opacity = "0"; }}
+                  className="session-delete-btn"
+                >
+                  <Trash2 size={13} strokeWidth={1.75} />
+                </button>
+              </div>
             );
           })
         )}
@@ -468,7 +498,6 @@ export default function Chat() {
       const task = await tasksApi.create({
         assignedToEmployeeId: selectedEmpId,
         title: text,
-        description: "",
         chatSessionId: capturedSessionId,
       });
 
@@ -624,6 +653,16 @@ export default function Chat() {
           activeSessionId={activeSessionId}
           onSelectSession={(sessionId) => setActiveSessionId(sessionId)}
           onNewChat={handleNewChat}
+          onDeleteSession={async (sessionId) => {
+            try {
+              await chatSessionsApi.delete(sessionId);
+              setSessions((prev) => ({
+                ...prev,
+                [selectedEmpId]: (prev[selectedEmpId] ?? []).filter((s) => s.id !== sessionId),
+              }));
+              if (activeSessionId === sessionId) setActiveSessionId(null);
+            } catch { /* ignore */ }
+          }}
         />
 
         {/* Right — conversation pane */}

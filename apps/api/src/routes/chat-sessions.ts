@@ -82,6 +82,26 @@ chatSessionRoutes.post("/", zValidator("json", createSessionSchema), async (c) =
   return c.json({ ok: true, data: { ...session, taskCount: 0 } }, 201);
 });
 
+// DELETE /chat-sessions/:id
+chatSessionRoutes.delete("/:id", async (c) => {
+  const { businessId } = c.get("user");
+  const sessionId = c.req.param("id");
+  const db = getDb();
+
+  const [session] = await db
+    .select()
+    .from(chatSessions)
+    .where(and(eq(chatSessions.id, sessionId), eq(chatSessions.businessId, businessId)));
+
+  if (!session) return c.json({ ok: false, error: "Session not found" }, 404);
+
+  // Null out chatSessionId on tasks (keep tasks, just unlink from session)
+  await db.update(tasks).set({ chatSessionId: null }).where(eq(tasks.chatSessionId, sessionId));
+  await db.delete(chatSessions).where(eq(chatSessions.id, sessionId));
+
+  return c.json({ ok: true, data: null });
+});
+
 // GET /chat-sessions/:id/tasks
 // Returns all tasks in session with latest run
 chatSessionRoutes.get("/:id/tasks", async (c) => {
