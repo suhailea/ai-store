@@ -5,6 +5,7 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 config({ path: resolve(__dirname, "../../../.env") });
 
 import { serve } from "@hono/node-server";
+import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import logger from "./lib/logger";
@@ -61,6 +62,21 @@ app.route("/api/workflows", workflowRoutes);
 app.route("/api/webhooks", webhookRoutes);
 
 app.onError(gatewayOnError);
+
+// ─── Serve frontend (production) ──────────────────────────────────────────────
+// serveStatic root is relative to process.cwd() (repo root on Railway).
+// In dev this serves nothing useful — Vite runs separately on port 5175.
+app.use("/*", serveStatic({ root: "apps/web/dist" }));
+// SPA fallback — unmatched routes return index.html so React Router works
+app.get("*", async (c) => {
+  const { readFileSync } = await import("fs");
+  const indexPath = resolve(process.cwd(), "apps/web/dist/index.html");
+  try {
+    return c.html(readFileSync(indexPath, "utf-8"));
+  } catch {
+    return c.text("Not found", 404);
+  }
+});
 
 const port = Number(process.env.PORT ?? 3003);
 logger.info(`API server running on http://localhost:${port}`);
